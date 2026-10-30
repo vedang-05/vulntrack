@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — VulnTrack Vulnerability Management</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <style>
+    /* Dashboard Specific Styles */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-xl);
+      margin-bottom: var(--space-xl);
+    }
+    @media (max-width: 992px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    /* Distribution Bar Widget */
+    .dist-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .dist-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .dist-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+    }
+    .dist-bar-track {
+      height: 8px;
+      background-color: var(--color-bg-app);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      border: 1px solid var(--color-border-subtle);
+    }
+    .dist-bar-fill {
+      height: 100%;
+      border-radius: var(--radius-full);
+      transition: width 0.4s ease-out;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Sidebar Navigation -->
+    <aside class="app-sidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="brand-link">
+          <div class="brand-shield">V</div>
+          <span class="brand-name">VulnTrack</span>
+        </a>
+        <span class="brand-version">v1.0</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Core Management</div>
+        <a href="index.html" class="nav-item active">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="findings.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <span>Findings</span>
+          <span class="nav-counter" id="nav-active-findings-cnt">—</span>
+        </a>
+        <a href="assets.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"/></svg>
+          <span>Asset Inventory</span>
+        </a>
+        <a href="catalog.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+          <span>Vulnerability Catalog</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-snippet">
+          <div class="user-avatar">U</div>
+          <div class="user-meta">
+            <div class="user-name">Loading...</div>
+            <div class="user-role-badge">ROLE</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="app-main">
+      <!-- Top Bar -->
+      <header class="app-topbar">
+        <div class="topbar-left">
+          <button type="button" class="mobile-menu-toggle" aria-label="Toggle menu">
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+          <div class="env-indicator"><span class="env-dot"></span><span>Connecting...</span></div>
+        </div>
+        <div class="topbar-right">
+          <a href="findings.html?action=new" class="btn btn-primary btn-sm">+ Log Finding</a>
+          <button type="button" id="logout-btn" class="btn btn-outline btn-sm">Sign Out</button>
+        </div>
+      </header>
+
+      <!-- Page Container -->
+      <main class="page-container">
+        <div class="page-header">
+          <div class="page-header-title">
+            <h1>Risk Posture Dashboard</h1>
+            <p>Real-time vulnerability risk posture, SLA compliance metrics, and remediation velocity.</p>
+          </div>
+          <div class="page-header-actions">
+            <a href="assets.html" class="btn btn-secondary btn-sm">+ Register Asset</a>
+          </div>
+        </div>
+
+        <!-- KPI Metric Cards Grid -->
+        <section class="metrics-grid" id="metrics-cards-grid">
+          <div class="metric-card">
+            <div class="metric-label">Active Vulnerabilities</div>
+            <div class="metric-value-wrap">
+              <span class="metric-value" id="stat-active">—</span>
+            </div>
+            <div class="metric-subtext">Open, in-progress or under-review</div>
+          </div>
+
+          <div class="metric-card alert-critical">
+            <div class="metric-label">Critical & High Risks</div>
+            <div class="metric-value-wrap">
+              <span class="metric-value" id="stat-critical-high" style="color: #fca5a5;">—</span>
+            </div>
+            <div class="metric-subtext">Requires urgent SLA mitigation</div>
+          </div>
+
+          <div class="metric-card alert-warning">
+            <div class="metric-label">Overdue SLA Breaches</div>
+            <div class="metric-value-wrap">
+              <span class="metric-value" id="stat-overdue" style="color: #fdba74;">—</span>
+            </div>
+            <div class="metric-subtext">Past target resolution date</div>
+          </div>
+
+          <div class="metric-card alert-success">
+            <div class="metric-label">Mean Time to Remediate</div>
+            <div class="metric-value-wrap">
+              <span class="metric-value" id="stat-mttr" style="color: #6ee7b7;">—</span>
+              <span style="font-size: 0.9rem; color: var(--color-text-muted);">days</span>
+            </div>
+            <div class="metric-subtext">Average days to close findings</div>
+          </div>
+        </section>
+
+        <!-- Visual Distribution Panels -->
+        <section class="dashboard-grid">
+          <!-- Severity Breakdown Card -->
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title">Active Findings by Technical Severity</h2>
+              <span class="badge badge-sev-info">CVSS Weighted</span>
+            </div>
+            <div id="severity-dist-container" class="dist-list">
+              <div class="skeleton-row"></div>
+              <div class="skeleton-row"></div>
+              <div class="skeleton-row"></div>
+            </div>
+          </div>
+
+          <!-- Remediation Workflow Pipeline Status -->
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title">Remediation Lifecycle Pipeline</h2>
+              <span class="badge badge-status-in_progress">State Machine</span>
+            </div>
+            <div id="status-dist-container" class="dist-list">
+              <div class="skeleton-row"></div>
+              <div class="skeleton-row"></div>
+              <div class="skeleton-row"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Two Data Tables: Top Vulnerable Assets & Overdue Queue -->
+        <section class="dashboard-grid">
+          <!-- Top Vulnerable Assets -->
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title">Top High-Risk Assets</h2>
+              <a href="assets.html" class="btn btn-outline btn-sm">View All Assets →</a>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Asset Name</th>
+                    <th>Env</th>
+                    <th>Active Issues</th>
+                    <th>Critical</th>
+                  </tr>
+                </thead>
+                <tbody id="top-assets-table-body">
+                  <tr><td colspan="4" style="text-align: center; padding: 20px;">Loading top assets...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Urgent SLA Breached Findings -->
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title">Overdue Remediation Queue</h2>
+              <a href="findings.html?isOverdue=true" class="btn btn-outline btn-sm">View Filtered →</a>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Finding</th>
+                    <th>Severity</th>
+                    <th>Due Date</th>
+                    <th>Overdue</th>
+                  </tr>
+                </thead>
+                <tbody id="overdue-findings-table-body">
+                  <tr><td colspan="4" style="text-align: center; padding: 20px;">Checking SLA deadlines...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div class="toast-container" aria-live="polite"></div>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/mock-data.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

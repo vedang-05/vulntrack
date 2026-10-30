@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asset Inventory — VulnTrack</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Sidebar Navigation -->
+    <aside class="app-sidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="brand-link">
+          <div class="brand-shield">V</div>
+          <span class="brand-name">VulnTrack</span>
+        </a>
+        <span class="brand-version">v1.0</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Core Management</div>
+        <a href="index.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="findings.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <span>Findings</span>
+        </a>
+        <a href="assets.html" class="nav-item active">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"/></svg>
+          <span>Asset Inventory</span>
+        </a>
+        <a href="catalog.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+          <span>Vulnerability Catalog</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-snippet">
+          <div class="user-avatar">U</div>
+          <div class="user-meta">
+            <div class="user-name">Loading...</div>
+            <div class="user-role-badge">ROLE</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="app-main">
+      <!-- Top Bar -->
+      <header class="app-topbar">
+        <div class="topbar-left">
+          <button type="button" class="mobile-menu-toggle" aria-label="Toggle menu">
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+          <div class="env-indicator"><span class="env-dot"></span><span>Connecting...</span></div>
+        </div>
+        <div class="topbar-right">
+          <button type="button" id="open-register-asset-modal" class="btn btn-primary btn-sm">+ Register Asset</button>
+          <button type="button" id="logout-btn" class="btn btn-outline btn-sm">Sign Out</button>
+        </div>
+      </header>
+
+      <!-- Page Container -->
+      <main class="page-container">
+        <div class="page-header">
+          <div class="page-header-title">
+            <h1>Infrastructure Asset Inventory</h1>
+            <p>Manage enterprise systems, hostnames, IP addresses, operating systems, and linked vulnerability posture.</p>
+          </div>
+        </div>
+
+        <!-- Filter & Search Toolbar -->
+        <section class="toolbar">
+          <div class="toolbar-filters">
+            <!-- Search -->
+            <div class="search-input-wrap">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="asset-search" class="form-control" placeholder="Search name, IP, hostname, OS...">
+            </div>
+
+            <!-- Environment Filter -->
+            <select id="asset-filter-env" class="form-control" style="width: auto;">
+              <option value="">All Environments</option>
+              <option value="PRODUCTION">Production</option>
+              <option value="STAGING">Staging</option>
+              <option value="DEVELOPMENT">Development</option>
+            </select>
+
+            <!-- Criticality Filter -->
+            <select id="asset-filter-crit" class="form-control" style="width: auto;">
+              <option value="">All Criticalities</option>
+              <option value="CRITICAL">Critical Impact</option>
+              <option value="HIGH">High Impact</option>
+              <option value="MEDIUM">Medium Impact</option>
+              <option value="LOW">Low Impact</option>
+            </select>
+
+            <!-- Include Archived Checkbox -->
+            <label style="display: flex; align-items: center; gap: 6px; font-size: 0.85rem; color: var(--color-text-secondary); cursor: pointer; user-select: none;">
+              <input type="checkbox" id="asset-filter-archived">
+              <span>Show Archived</span>
+            </label>
+          </div>
+
+          <div>
+            <button type="button" id="reset-asset-filters" class="btn btn-outline btn-sm">Reset Filters</button>
+          </div>
+        </section>
+
+        <!-- Assets Data Table -->
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Asset Name</th>
+                <th>Type</th>
+                <th>IP / Hostname</th>
+                <th>Operating System</th>
+                <th>Env</th>
+                <th>Criticality</th>
+                <th>Owner Team</th>
+                <th>Findings</th>
+                <th style="text-align: right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="assets-table-body">
+              <tr>
+                <td colspan="9" style="text-align: center; padding: 30px;">
+                  <div class="skeleton-row"></div>
+                  <div class="skeleton-row"></div>
+                  <div class="skeleton-row"></div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <!-- Pagination -->
+          <div class="table-pagination" id="assets-pagination"></div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Register / Create Asset Modal -->
+  <div id="modal-create-asset" class="modal-overlay">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h2 style="font-size: 1.15rem;">Register Infrastructure Asset</h2>
+        <button type="button" class="btn btn-outline btn-sm" onclick="UI.closeModal('modal-create-asset')">✕</button>
+      </div>
+      <form id="form-create-asset">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="create-asset-name" class="form-label required">Asset Name</label>
+            <input type="text" id="create-asset-name" class="form-control" placeholder="e.g. Production Database Primary" required>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md);">
+            <div class="form-group">
+              <label for="create-asset-type" class="form-label required">Asset Type</label>
+              <select id="create-asset-type" class="form-control" required>
+                <option value="SERVER">SERVER</option>
+                <option value="DATABASE">DATABASE</option>
+                <option value="WEB_APP">WEB_APP</option>
+                <option value="NETWORK">NETWORK</option>
+                <option value="CLOUD_RESOURCE">CLOUD_RESOURCE</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="create-asset-env" class="form-label required">Environment</label>
+              <select id="create-asset-env" class="form-control" required>
+                <option value="PRODUCTION">PRODUCTION</option>
+                <option value="STAGING">STAGING</option>
+                <option value="DEVELOPMENT" selected>DEVELOPMENT</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md);">
+            <div class="form-group">
+              <label for="create-asset-ip" class="form-label">IP Address</label>
+              <input type="text" id="create-asset-ip" class="form-control" placeholder="e.g. 10.0.1.20">
+            </div>
+            <div class="form-group">
+              <label for="create-asset-host" class="form-label">Hostname / FQDN</label>
+              <input type="text" id="create-asset-host" class="form-control" placeholder="e.g. db-prod-01.corp.internal">
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md);">
+            <div class="form-group">
+              <label for="create-asset-os" class="form-label">Operating System</label>
+              <input type="text" id="create-asset-os" class="form-control" placeholder="e.g. Ubuntu 22.04 LTS, RHEL 9">
+            </div>
+            <div class="form-group">
+              <label for="create-asset-crit" class="form-label required">Business Criticality</label>
+              <select id="create-asset-crit" class="form-control" required>
+                <option value="CRITICAL">CRITICAL</option>
+                <option value="HIGH">HIGH</option>
+                <option value="MEDIUM" selected>MEDIUM</option>
+                <option value="LOW">LOW</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="create-asset-owner" class="form-label required">Owner Department / Team</label>
+            <input type="text" id="create-asset-owner" class="form-control" placeholder="e.g. Data Platform, SecOps" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="UI.closeModal('modal-create-asset')">Cancel</button>
+          <button type="submit" id="btn-save-new-asset" class="btn btn-primary">Save Asset</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit Asset Modal -->
+  <div id="modal-edit-asset" class="modal-overlay">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h2 style="font-size: 1.15rem;">Edit Asset Attributes</h2>
+        <button type="button" class="btn btn-outline btn-sm" onclick="UI.closeModal('modal-edit-asset')">✕</button>
+      </div>
+      <form id="form-edit-asset">
+        <input type="hidden" id="edit-asset-id">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="edit-asset-name" class="form-label required">Asset Name</label>
+            <input type="text" id="edit-asset-name" class="form-control" required>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md);">
+            <div class="form-group">
+              <label for="edit-asset-type" class="form-label required">Asset Type</label>
+              <select id="edit-asset-type" class="form-control" required>
+                <option value="SERVER">SERVER</option>
+                <option value="DATABASE">DATABASE</option>
+                <option value="WEB_APP">WEB_APP</option>
+                <option value="NETWORK">NETWORK</option>
+                <option value="CLOUD_RESOURCE">CLOUD_RESOURCE</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="edit-asset-env" class="form-label required">Environment</label>
+              <select id="edit-asset-env" class="form-control" required>
+                <option value="PRODUCTION">PRODUCTION</option>
+                <option value="STAGING">STAGING</option>
+                <option value="DEVELOPMENT">DEVELOPMENT</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md);">
+            <div class="form-group">
+              <label for="edit-asset-ip" class="form-label">IP Address</label>
+              <input type="text" id="edit-asset-ip" class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="edit-asset-host" class="form-label">Hostname / FQDN</label>
+              <input type="text" id="edit-asset-host" class="form-control">
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md);">
+            <div class="form-group">
+              <label for="edit-asset-os" class="form-label">Operating System</label>
+              <input type="text" id="edit-asset-os" class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="edit-asset-crit" class="form-label required">Business Criticality</label>
+              <select id="edit-asset-crit" class="form-control" required>
+                <option value="CRITICAL">CRITICAL</option>
+                <option value="HIGH">HIGH</option>
+                <option value="MEDIUM">MEDIUM</option>
+                <option value="LOW">LOW</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="edit-asset-owner" class="form-label required">Owner Department / Team</label>
+            <input type="text" id="edit-asset-owner" class="form-control" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="UI.closeModal('modal-edit-asset')">Cancel</button>
+          <button type="submit" id="btn-update-asset" class="btn btn-primary">Update Asset</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Archive Confirmation Modal -->
+  <div id="modal-archive-asset" class="modal-overlay">
+    <div class="modal-dialog" style="max-width: 460px;">
+      <div class="modal-header">
+        <h2 id="archive-modal-title" style="font-size: 1.15rem;">Archive Asset</h2>
+        <button type="button" class="btn btn-outline btn-sm" onclick="UI.closeModal('modal-archive-asset')">✕</button>
+      </div>
+      <div class="modal-body">
+        <p id="archive-modal-text" style="color: var(--color-text-secondary); font-size: 0.9rem; margin-bottom: 12px;"></p>
+        <div style="background-color: var(--color-bg-app); border: 1px solid var(--color-border); padding: 12px; border-radius: var(--radius-md); font-size: 0.8rem; color: #94a3b8;">
+          <strong>Historical Integrity Preserved:</strong> Archiving removes this asset from active operational monitoring queues while safely preserving all associated vulnerability findings, remediation records, and audit history.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" onclick="UI.closeModal('modal-archive-asset')">Cancel</button>
+        <button type="button" id="btn-confirm-archive" class="btn btn-danger">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" aria-live="polite"></div>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/mock-data.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/assets.js"></script>
+</body>
+</html>

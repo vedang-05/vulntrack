@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vulnerability Catalog — VulnTrack</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Sidebar Navigation -->
+    <aside class="app-sidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="brand-link">
+          <div class="brand-shield">V</div>
+          <span class="brand-name">VulnTrack</span>
+        </a>
+        <span class="brand-version">v1.0</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Core Management</div>
+        <a href="index.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="findings.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <span>Findings</span>
+        </a>
+        <a href="assets.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"/></svg>
+          <span>Asset Inventory</span>
+        </a>
+        <a href="catalog.html" class="nav-item active">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+          <span>Vulnerability Catalog</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-snippet">
+          <div class="user-avatar">U</div>
+          <div class="user-meta">
+            <div class="user-name">Loading...</div>
+            <div class="user-role-badge">ROLE</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="app-main">
+      <!-- Top Bar -->
+      <header class="app-topbar">
+        <div class="topbar-left">
+          <button type="button" class="mobile-menu-toggle" aria-label="Toggle menu">
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+          <div class="env-indicator"><span class="env-dot"></span><span>Connecting...</span></div>
+        </div>
+        <div class="topbar-right">
+          <button type="button" id="open-add-catalog-modal" class="btn btn-primary btn-sm">+ Add CVE Definition</button>
+          <button type="button" id="logout-btn" class="btn btn-outline btn-sm">Sign Out</button>
+        </div>
+      </header>
+
+      <!-- Page Container -->
+      <main class="page-container">
+        <div class="page-header">
+          <div class="page-header-title">
+            <h1>Master Vulnerability Catalog</h1>
+            <p>Standard vulnerability dictionary (CVE/CWE references, CVSS v3.1 scoring, and remediation advisories) independent of asset instances.</p>
+          </div>
+        </div>
+
+        <!-- Filters & Search Toolbar -->
+        <section class="toolbar">
+          <div class="toolbar-filters">
+            <!-- Search -->
+            <div class="search-input-wrap">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="catalog-search" class="form-control" placeholder="Search CVE, CWE, title or keywords...">
+            </div>
+
+            <!-- Severity Filter -->
+            <select id="catalog-filter-sev" class="form-control" style="width: auto;">
+              <option value="">All Severities</option>
+              <option value="CRITICAL">Critical</option>
+              <option value="HIGH">High</option>
+              <option value="MEDIUM">Medium</option>
+              <option value="LOW">Low</option>
+              <option value="INFO">Info</option>
+            </select>
+          </div>
+
+          <div>
+            <button type="button" id="reset-catalog-filters" class="btn btn-outline btn-sm">Reset</button>
+          </div>
+        </section>
+
+        <!-- Catalog Data Table -->
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width: 140px;">Identifier</th>
+                <th style="width: 100px;">CWE</th>
+                <th>Title & Description</th>
+                <th style="width: 110px;">Severity</th>
+                <th style="width: 90px;">CVSS</th>
+                <th>Remediation Advisory</th>
+              </tr>
+            </thead>
+            <tbody id="catalog-table-body">
+              <tr>
+                <td colspan="6" style="text-align: center; padding: 30px;">
+                  <div class="skeleton-row"></div>
+                  <div class="skeleton-row"></div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <!-- Pagination -->
+          <div class="table-pagination" id="catalog-pagination"></div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Add Catalog Definition Modal -->
+  <div id="modal-add-catalog" class="modal-overlay">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h2 style="font-size: 1.15rem;">Add Master Vulnerability Definition</h2>
+        <button type="button" class="btn btn-outline btn-sm" onclick="UI.closeModal('modal-add-catalog')">✕</button>
+      </div>
+      <form id="form-add-catalog">
+        <div class="modal-body">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md);">
+            <div class="form-group">
+              <label for="catalog-cve" class="form-label">CVE Identifier</label>
+              <input type="text" id="catalog-cve" class="form-control" placeholder="e.g. CVE-2023-38606">
+            </div>
+            <div class="form-group">
+              <label for="catalog-cwe" class="form-label">CWE Identifier</label>
+              <input type="text" id="catalog-cwe" class="form-control" placeholder="e.g. CWE-89, CWE-79">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="catalog-title" class="form-label required">Vulnerability Title</label>
+            <input type="text" id="catalog-title" class="form-control" placeholder="e.g. SQL Injection in Authentication Endpoint" required>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md);">
+            <div class="form-group">
+              <label for="catalog-sev" class="form-label required">Default Severity</label>
+              <select id="catalog-sev" class="form-control" required>
+                <option value="CRITICAL">CRITICAL</option>
+                <option value="HIGH">HIGH</option>
+                <option value="MEDIUM" selected>MEDIUM</option>
+                <option value="LOW">LOW</option>
+                <option value="INFO">INFO</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="catalog-cvss" class="form-label required">CVSS v3.1 Base Score (0.0 - 10.0)</label>
+              <input type="number" id="catalog-cvss" class="form-control" min="0.0" max="10.0" step="0.1" value="7.5" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="catalog-desc" class="form-label required">Technical Description</label>
+            <textarea id="catalog-desc" class="form-control" placeholder="Technical root cause, attack vector, and impact..." required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="catalog-remediation" class="form-label">Vendor Patch / Remediation Guidance</label>
+            <textarea id="catalog-remediation" class="form-control" placeholder="Suggested vendor upgrade, patch ID, or configuration workaround..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="UI.closeModal('modal-add-catalog')">Cancel</button>
+          <button type="submit" id="btn-save-catalog" class="btn btn-primary">Save to Catalog</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast-container" aria-live="polite"></div>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/mock-data.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/catalog.js"></script>
+</body>
+</html>

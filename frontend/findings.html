@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Findings & Remediation — VulnTrack</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Sidebar Navigation -->
+    <aside class="app-sidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="brand-link">
+          <div class="brand-shield">V</div>
+          <span class="brand-name">VulnTrack</span>
+        </a>
+        <span class="brand-version">v1.0</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Core Management</div>
+        <a href="index.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="findings.html" class="nav-item active">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <span>Findings</span>
+          <span class="nav-counter" id="nav-active-cnt">—</span>
+        </a>
+        <a href="assets.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"/></svg>
+          <span>Asset Inventory</span>
+        </a>
+        <a href="catalog.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+          <span>Vulnerability Catalog</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-snippet">
+          <div class="user-avatar">U</div>
+          <div class="user-meta">
+            <div class="user-name">Loading...</div>
+            <div class="user-role-badge">ROLE</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="app-main">
+      <!-- Top Bar -->
+      <header class="app-topbar">
+        <div class="topbar-left">
+          <button type="button" class="mobile-menu-toggle" aria-label="Toggle menu">
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+          <div class="env-indicator"><span class="env-dot"></span><span>Connecting...</span></div>
+        </div>
+        <div class="topbar-right">
+          <button type="button" id="open-log-finding-modal" class="btn btn-primary btn-sm">+ Log Finding</button>
+          <button type="button" id="logout-btn" class="btn btn-outline btn-sm">Sign Out</button>
+        </div>
+      </header>
+
+      <!-- Page Container -->
+      <main class="page-container">
+        <div class="page-header">
+          <div class="page-header-title">
+            <h1>Vulnerability Findings & Remediation</h1>
+            <p>Track detected vulnerabilities across assets, enforce state machine transitions, and monitor SLA compliance.</p>
+          </div>
+        </div>
+
+        <!-- Filter & Search Toolbar -->
+        <section class="toolbar">
+          <div class="toolbar-filters">
+            <!-- Search -->
+            <div class="search-input-wrap">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="finding-search" class="form-control" placeholder="Search title, asset, or CVE...">
+            </div>
+
+            <!-- Status Filter -->
+            <select id="finding-filter-status" class="form-control" style="width: auto;">
+              <option value="">All Statuses</option>
+              <option value="OPEN">Open</option>
+              <option value="IN_PROGRESS">In Progress</option>
+              <option value="UNDER_REVIEW">Under Review</option>
+              <option value="CLOSED">Closed</option>
+              <option value="FALSE_POSITIVE">False Positive</option>
+              <option value="RISK_ACCEPTED">Risk Accepted</option>
+              <option value="REOPENED">Reopened</option>
+            </select>
+
+            <!-- Severity Filter -->
+            <select id="finding-filter-sev" class="form-control" style="width: auto;">
+              <option value="">All Severities</option>
+              <option value="CRITICAL">Critical</option>
+              <option value="HIGH">High</option>
+              <option value="MEDIUM">Medium</option>
+              <option value="LOW">Low</option>
+              <option value="INFO">Info</option>
+            </select>
+
+            <!-- Priority Filter -->
+            <select id="finding-filter-prio" class="form-control" style="width: auto;">
+              <option value="">All Priorities</option>
+              <option value="P1">P1 - Urgent</option>
+              <option value="P2">P2 - High</option>
+              <option value="P3">P3 - Standard</option>
+              <option value="P4">P4 - Low</option>
+            </select>
+
+            <!-- Asset Filter Dropdown -->
+            <select id="finding-filter-asset" class="form-control" style="width: auto;">
+              <option value="">All Assets</option>
+            </select>
+
+            <!-- Overdue Checkbox -->
+            <label style="display: flex; align-items: center; gap: 6px; font-size: 0.85rem; color: var(--color-text-secondary); cursor: pointer; user-select: none;">
+              <input type="checkbox" id="finding-filter-overdue">
+              <span>SLA Overdue Only</span>
+            </label>
+          </div>
+
+          <div>
+            <button type="button" id="reset-finding-filters" class="btn btn-outline btn-sm">Reset</button>
+          </div>
+        </section>
+
+        <!-- Findings Table -->
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width: 70px;">ID</th>
+                <th>Finding Title & CVE</th>
+                <th>Target Asset</th>
+                <th style="width: 100px;">Severity</th>
+                <th style="width: 80px;">Priority</th>
+                <th style="width: 120px;">Status</th>
+                <th style="width: 120px;">Due Date / SLA</th>
+                <th>Assignee</th>
+                <th style="text-align: right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="findings-table-body">
+              <tr>
+                <td colspan="9" style="text-align: center; padding: 30px;">
+                  <div class="skeleton-row"></div>
+                  <div class="skeleton-row"></div>
+                  <div class="skeleton-row"></div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <!-- Pagination -->
+          <div class="table-pagination" id="findings-pagination"></div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Log / Create Finding Modal -->
+  <div id="modal-create-finding" class="modal-overlay">
+    <div class="modal-dialog" style="max-width: 640px;">
+      <div class="modal-header">
+        <h2 style="font-size: 1.15rem;">Log Vulnerability Finding</h2>
+        <button type="button" class="btn btn-outline btn-sm" onclick="UI.closeModal('modal-create-finding')">✕</button>
+      </div>
+      <form id="form-create-finding">
+        <div class="modal-body">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md);">
+            <div class="form-group">
+              <label for="create-f-asset" class="form-label required">Target Asset</label>
+              <select id="create-f-asset" class="form-control" required>
+                <option value="">Select Asset...</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="create-f-catalog" class="form-label required">Catalog Definition</label>
+              <select id="create-f-catalog" class="form-control" required>
+                <option value="">Select Catalog CVE...</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="create-f-title" class="form-label required">Finding Title</label>
+            <input type="text" id="create-f-title" class="form-control" placeholder="Specific instance title" required>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--space-md);">
+            <div class="form-group">
+              <label for="create-f-sev" class="form-label required">Severity</label>
+              <select id="create-f-sev" class="form-control" required>
+                <option value="CRITICAL">CRITICAL</option>
+                <option value="HIGH">HIGH</option>
+                <option value="MEDIUM" selected>MEDIUM</option>
+                <option value="LOW">LOW</option>
+                <option value="INFO">INFO</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="create-f-prio" class="form-label required">Operational Priority</label>
+              <select id="create-f-prio" class="form-control" required>
+                <option value="P1">P1 - Urgent</option>
+                <option value="P2">P2 - High</option>
+                <option value="P3" selected>P3 - Medium</option>
+                <option value="P4">P4 - Low</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="create-f-due" class="form-label required">Due Date (SLA)</label>
+              <input type="date" id="create-f-due" class="form-control" required>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr; gap: var(--space-md);">
+            <div class="form-group">
+              <label for="create-f-assignee" class="form-label">Assignee (Remediator)</label>
+              <select id="create-f-assignee" class="form-control">
+                <option value="">Unassigned</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="create-f-desc" class="form-label">Specific Discovery Details</label>
+            <textarea id="create-f-desc" class="form-control" placeholder="Target port, specific endpoint, exploit observation..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="create-f-notes" class="form-label">Remediation Action Plan</label>
+            <textarea id="create-f-notes" class="form-control" placeholder="Initial recommendations for the remediation team..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="UI.closeModal('modal-create-finding')">Cancel</button>
+          <button type="submit" id="btn-save-finding" class="btn btn-primary">Log Finding</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Remediation State Machine Transition Modal -->
+  <div id="modal-transition-finding" class="modal-overlay">
+    <div class="modal-dialog" style="max-width: 500px;">
+      <div class="modal-header">
+        <h2 style="font-size: 1.15rem;">Remediation State Transition</h2>
+        <button type="button" class="btn btn-outline btn-sm" onclick="UI.closeModal('modal-transition-finding')">✕</button>
+      </div>
+      <form id="form-transition-finding">
+        <input type="hidden" id="trans-finding-id">
+        <div class="modal-body">
+          <div style="background-color: var(--color-bg-app); border: 1px solid var(--color-border); padding: 12px; border-radius: var(--radius-md); margin-bottom: var(--space-md);">
+            <div style="font-size: 0.78rem; color: var(--color-text-muted);">CURRENT STATUS</div>
+            <div id="trans-current-status" style="margin-top: 4px; font-weight: 600;"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="trans-new-status" class="form-label required">Allowed Next State</label>
+            <select id="trans-new-status" class="form-control" required>
+              <!-- Populated dynamically based on state machine rules -->
+            </select>
+            <span class="form-hint">Only valid transitions enforced by the state machine are listed.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="trans-reason" class="form-label required">Transition Justification / Audit Reason</label>
+            <textarea id="trans-reason" class="form-control" placeholder="Explain the verification steps, patch deployment, or exception rationale..." required minlength="10"></textarea>
+            <span class="form-hint">Mandatory: recorded in immutable audit log.</span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="UI.closeModal('modal-transition-finding')">Cancel</button>
+          <button type="submit" id="btn-submit-transition" class="btn btn-primary">Authorize Transition</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Slide-Over Finding Detail Drawer -->
+  <div id="drawer-finding-detail" class="drawer-overlay">
+    <div class="drawer">
+      <div class="drawer-header">
+        <div>
+          <div id="drawer-finding-id" style="font-size: 0.75rem; color: var(--color-text-muted); font-family: var(--font-family-mono);">FINDING #</div>
+          <h2 id="drawer-finding-title" style="font-size: 1.2rem; margin-top: 4px;"></h2>
+        </div>
+        <button type="button" class="btn btn-outline btn-sm" onclick="UI.closeModalOrDrawer('drawer-finding-detail')">✕</button>
+      </div>
+
+      <div class="drawer-body">
+        <!-- Status & Severity Badges Bar -->
+        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <span id="drawer-badge-status"></span>
+          <span id="drawer-badge-sev"></span>
+          <span id="drawer-badge-prio"></span>
+          <span id="drawer-badge-sla"></span>
+        </div>
+
+        <!-- Detail Cards -->
+        <div class="card" style="padding: 14px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 0.85rem;">
+            <div>
+              <span class="text-muted">Target Asset:</span>
+              <div id="drawer-asset-name" style="font-weight: 600; color: var(--color-text-primary);"></div>
+            </div>
+            <div>
+              <span class="text-muted">CVE / Catalog Reference:</span>
+              <div id="drawer-catalog-cve" class="text-mono" style="font-weight: 600; color: #38bdf8;"></div>
+            </div>
+            <div>
+              <span class="text-muted">Assignee:</span>
+              <div id="drawer-assignee-name" style="color: var(--color-text-primary);"></div>
+            </div>
+            <div>
+              <span class="text-muted">Discovered Date:</span>
+              <div id="drawer-discovered-date" style="color: var(--color-text-primary);"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Discovery Details -->
+        <div>
+          <h4 style="margin-bottom: 6px; font-size: 0.95rem;">Discovery Observation</h4>
+          <p id="drawer-description" style="font-size: 0.88rem; background-color: var(--color-bg-app); padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--color-border-subtle);"></p>
+        </div>
+
+        <!-- Remediation Notes -->
+        <div>
+          <h4 style="margin-bottom: 6px; font-size: 0.95rem;">Remediation Guidance & Notes</h4>
+          <p id="drawer-remediation" style="font-size: 0.88rem; background-color: var(--color-bg-app); padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--color-border-subtle);"></p>
+        </div>
+
+        <!-- Remediation History Timeline -->
+        <div>
+          <h4 style="margin-bottom: 12px; font-size: 0.95rem;">Remediation Audit History</h4>
+          <div id="drawer-timeline" class="timeline">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+
+        <!-- Discussion Comments Thread -->
+        <div>
+          <h4 style="margin-bottom: 12px; font-size: 0.95rem;">Team Discussion & Notes</h4>
+          <div id="drawer-comments-list" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px;"></div>
+          <form id="form-add-comment" style="display: flex; gap: 8px;">
+            <input type="text" id="input-comment-text" class="form-control" placeholder="Add technical comment or note..." required>
+            <button type="submit" class="btn btn-primary btn-sm">Post</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" aria-live="polite"></div>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/mock-data.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/findings.js"></script>
+</body>
+</html>

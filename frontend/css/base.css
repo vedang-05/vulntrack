@@ -1,0 +1,170 @@
+/* ==========================================================================
+   VulnTrack - Base Styles & Design Tokens
+   Target: Clean, professional Security Operations UI
+   ========================================================================== */
+
+:root {
+  /* Color Palette - Neutrals */
+  --color-bg-app: #0f172a;        /* Deep slate background */
+  --color-bg-surface: #1e293b;    /* Dark card / panel surface */
+  --color-bg-surface-elevated: #334155;
+  --color-border: #334155;
+  --color-border-subtle: #1e293b;
+  --color-border-focus: #38bdf8;
+
+  /* Typography */
+  --font-family-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-family-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+  /* Text Colors */
+  --color-text-primary: #f8fafc;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted: #64748b;
+  --color-text-inverse: #0f172a;
+
+  /* Brand / Primary */
+  --color-primary: #0284c7;       /* Sky blue 600 */
+  --color-primary-hover: #0369a1; /* Sky blue 700 */
+  --color-primary-light: rgba(2, 132, 199, 0.15);
+  --color-primary-border: #0ea5e9;
+
+  /* Severity Tokens (High Contrast, WCAG AA compliant) */
+  --sev-critical-bg: #450a0a;
+  --sev-critical-text: #fecaca;
+  --sev-critical-border: #dc2626;
+
+  --sev-high-bg: #431407;
+  --sev-high-text: #fed7aa;
+  --sev-high-border: #ea580c;
+
+  --sev-medium-bg: #422006;
+  --sev-medium-text: #fef08a;
+  --sev-medium-border: #ca8a04;
+
+  --sev-low-bg: #172554;
+  --sev-low-text: #bfdbfe;
+  --sev-low-border: #2563eb;
+
+  --sev-info-bg: #042f2e;
+  --sev-info-text: #99f6e4;
+  --sev-info-border: #0d9488;
+
+  /* Priority Tokens (P1 to P4) */
+  --prio-p1-bg: #7f1d1d;
+  --prio-p1-text: #fee2e2;
+  --prio-p2-bg: #7c2d12;
+  --prio-p2-text: #ffedd5;
+  --prio-p3-bg: #713f12;
+  --prio-p3-text: #fef9c3;
+  --prio-p4-bg: #1e3a8a;
+  --prio-p4-text: #dbeafe;
+
+  /* Status Tokens */
+  --status-open-bg: #1e3a8a;
+  --status-open-text: #93c5fd;
+  --status-inprogress-bg: #3b0764;
+  --status-inprogress-text: #d8b4fe;
+  --status-underreview-bg: #451a03;
+  --status-underreview-text: #fdba74;
+  --status-closed-bg: #064e3b;
+  --status-closed-text: #6ee7b7;
+  --status-fp-bg: #27272a;
+  --status-fp-text: #a1a1aa;
+  --status-riskaccept-bg: #312e81;
+  --status-riskaccept-text: #c7d2fe;
+  --status-reopened-bg: #831843;
+  --status-reopened-text: #fbcfe8;
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+
+  /* Radii */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
+
+  /* Transitions */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Reset & Box Sizing */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 14px;
+  line-height: 1.5;
+  color-scheme: dark;
+}
+
+body {
+  font-family: var(--font-family-sans);
+  background-color: var(--color-bg-app);
+  color: var(--color-text-primary);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Typography Defaults */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-text-primary);
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+h1 { font-size: 1.75rem; letter-spacing: -0.02em; }
+h2 { font-size: 1.4rem; letter-spacing: -0.01em; }
+h3 { font-size: 1.15rem; }
+h4 { font-size: 1.0rem; }
+
+p {
+  color: var(--color-text-secondary);
+}
+
+code, pre, kbd, samp {
+  font-family: var(--font-family-mono);
+  font-size: 0.9em;
+}
+
+/* Accessible Focus States */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 2px;
+}
+
+/* Utilities */
+.text-muted { color: var(--color-text-muted); }
+.text-secondary { color: var(--color-text-secondary); }
+.text-mono { font-family: var(--font-family-mono); }
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

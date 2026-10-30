@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — VulnTrack Vulnerability Management</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <style>
+    .auth-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at 50% 20%, #1e293b 0%, #0f172a 100%);
+      padding: var(--space-md);
+    }
+    .auth-card {
+      width: 100%;
+      max-width: 440px;
+      background-color: var(--color-bg-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-2xl) var(--space-xl);
+      box-shadow: var(--shadow-lg);
+    }
+    .auth-header {
+      text-align: center;
+      margin-bottom: var(--space-xl);
+    }
+    .auth-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-md);
+      text-decoration: none;
+    }
+    .auth-brand .brand-shield {
+      width: 40px;
+      height: 40px;
+      font-size: 1.25rem;
+    }
+    .auth-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--color-text-primary);
+    }
+    .auth-subtitle {
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      margin-top: 4px;
+    }
+    .quick-creds {
+      margin-top: var(--space-lg);
+      padding: var(--space-md);
+      background-color: var(--color-bg-app);
+      border: 1px dashed var(--color-border);
+      border-radius: var(--radius-md);
+      font-size: 0.78rem;
+    }
+    .quick-creds-title {
+      font-weight: 600;
+      color: var(--color-text-secondary);
+      margin-bottom: 6px;
+    }
+    .quick-creds-btns {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body class="auth-page">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="auth-brand">
+        <div class="brand-shield">V</div>
+        <span class="brand-name" style="font-size: 1.4rem;">VulnTrack</span>
+      </div>
+      <h1 class="auth-title">Security Console Sign In</h1>
+      <p class="auth-subtitle">Enterprise Vulnerability Assessment & Remediation</p>
+    </div>
+
+    <!-- Error Alert Banner -->
+    <div id="login-error-alert" class="card" style="display: none; border-left: 4px solid #ef4444; padding: 10px 14px; margin-bottom: var(--space-md); background: rgba(239, 68, 68, 0.1);">
+      <p id="login-error-msg" style="color: #fca5a5; font-size: 0.85rem;"></p>
+    </div>
+
+    <form id="login-form">
+      <div class="form-group">
+        <label for="username" class="form-label required">Username or Email</label>
+        <input type="text" id="username" class="form-control" placeholder="e.g. analyst1" required autofocus autocomplete="username">
+      </div>
+
+      <div class="form-group">
+        <label for="password" class="form-label required">Password</label>
+        <input type="password" id="password" class="form-control" placeholder="••••••••••••" required autocomplete="current-password">
+      </div>
+
+      <button type="submit" id="submit-btn" class="btn btn-primary" style="width: 100%; margin-top: var(--space-md);">
+        Sign In
+      </button>
+    </form>
+
+    <!-- Quick Credentials Helper for Demo & Evaluation -->
+    <div class="quick-creds">
+      <div class="quick-creds-title">Demo / Evaluation Accounts:</div>
+      <div class="quick-creds-btns">
+        <button type="button" class="btn btn-outline btn-sm cred-preset" data-user="analyst1" data-role="Analyst">Analyst</button>
+        <button type="button" class="btn btn-outline btn-sm cred-preset" data-user="dev_bob" data-role="Developer">Developer</button>
+        <button type="button" class="btn btn-outline btn-sm cred-preset" data-user="admin" data-role="Admin">Admin</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" aria-live="polite"></div>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/mock-data.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/login.js"></script>
+</body>
+</html>
